@@ -399,6 +399,74 @@ st.markdown("""
     .stToggle > label > div {
         background: var(--bg-card);
     }
+
+    /* Glass / frosted card variant */
+    .glass {
+        background: rgba(255,255,255,0.03);
+        backdrop-filter: blur(6px) saturate(120%);
+        -webkit-backdrop-filter: blur(6px) saturate(120%);
+        border: 1px solid rgba(255,255,255,0.04);
+        box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+    }
+
+    /* Hero header */
+    .hero {
+        padding: 1.25rem 1.5rem;
+        border-radius: 12px;
+        background: linear-gradient(90deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08));
+        border: 1px solid rgba(99,102,241,0.12);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .hero .title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .hero .subtitle {
+        color: var(--text-secondary);
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    /* Animated KPI badge */
+    .kpi-badge {
+        display: inline-block;
+        padding: 0.4rem 0.65rem;
+        border-radius: 999px;
+        font-weight: 700;
+        color: white;
+        background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+        box-shadow: 0 6px 18px rgba(99,102,241,0.18);
+        animation: pulse 2.6s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-3px) scale(1.02); }
+        100% { transform: translateY(0) scale(1); }
+    }
+
+    /* Quick-link card hover animation */
+    .card { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+    .card:hover { transform: translateY(-6px); }
+
+    /* Theme toggle in sidebar */
+    .theme-toggle {
+        display:flex;justify-content:center;gap:0.5rem;align-items:center;padding:0.5rem 0;
+    }
+
+    /* Small helpers */
+    .muted { color: var(--text-secondary); }
+
+    /* Tiny icon badge */
+    .icon-badge { font-size:1.1rem; margin-right:0.4rem }
+
 </style>
 """, unsafe_allow_html=True)
 
