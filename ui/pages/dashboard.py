@@ -336,7 +336,40 @@ def render_chart_panel():
 
     # Create candlestick chart
     fig = create_candlestick_chart(df, symbol, timeframe, connector)
-    st.plotly_chart(fig, use_container_width=True, key="main_chart")
+    # Improve layout: add range selector and rangeslider for interactive zoom
+    try:
+        fig.update_layout(
+            template='plotly_dark',
+            autosize=True,
+            margin=dict(l=10, r=10, t=35, b=20),
+            xaxis=dict(
+                rangeselector=dict(
+                    buttons=[
+                        dict(count=1, label='1h', step='hour', stepmode='backward'),
+                        dict(count=6, label='6h', step='hour', stepmode='backward'),
+                        dict(count=12, label='12h', step='hour', stepmode='backward'),
+                        dict(count=1, label='1d', step='day', stepmode='backward'),
+                        dict(step='all')
+                    ]
+                ),
+                rangeslider=dict(visible=True),
+                type='date'
+            ),
+            yaxis=dict(fixedrange=False),
+            hovermode='x unified',
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1)
+        )
+    except Exception:
+        pass
+
+    # Use a placeholder so auto-refresh can replace chart smoothly
+    chart_placeholder = st.empty()
+    chart_placeholder.plotly_chart(
+        fig,
+        use_container_width=True,
+        key="main_chart",
+        config={"displayModeBar": True, "scrollZoom": True}
+    )
 
     # Current price display
     if connector and connector.is_connected():
