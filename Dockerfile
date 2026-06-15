@@ -1,7 +1,15 @@
 # XAU-60 Trading Bot - Dockerfile
-# Supports Windows Server with MT5 integration
-
-FROM python:3.11-slim-windowsservercore
+#
+# IMPORTANT: For MT5 support (live trading), use Windows containers:
+# 1. In Docker Desktop: Settings → Resources → WSL Integration → Enable Windows containers
+# 2. Then uncomment the Windows base image below
+# 3. For Linux/demo mode, this image works as-is
+#
+# Windows Container Version (requires Docker Desktop set to Windows containers):
+# FROM python:3.11-slim-windowsservercore
+#
+# Linux Version (default - for demo/backtesting):
+FROM python:3.11-slim
 
 WORKDIR /app
 
@@ -13,9 +21,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application
 COPY . .
-
-# Create non-root user for security (Linux behavior - note: Windows containers work differently)
-# For Windows, we keep default container user
 
 # Expose Streamlit default port
 EXPOSE 8501
