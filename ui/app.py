@@ -493,6 +493,10 @@ def get_connection_status():
 
 def main():
     """Main application entry point."""
+    # Initialize theme in session state
+    if "theme" not in st.session_state:
+        st.session_state["theme"] = "dark"
+
     # Get connection status
     conn_status, conn_text = get_connection_status()
 
@@ -578,7 +582,42 @@ def main():
         </div>
         """, unsafe_allow_html=True)
 
+        # Theme toggle (persist in session state)
+        try:
+            theme_choice = st.radio(
+                "Theme",
+                ["Dark", "Light"],
+                index=0 if st.session_state.get("theme", "dark") == "dark" else 1,
+                key="sidebar_theme_radio",
+                label_visibility="collapsed"
+            )
+            st.session_state["theme"] = "dark" if theme_choice == "Dark" else "light"
+        except Exception:
+            pass
+
     # Landing content
+    # Inject light-theme overrides when requested
+    if st.session_state.get("theme") == "light":
+        st.markdown(
+            """
+            <style>
+            :root {
+                --primary: #2563eb;
+                --primary-dark: #1e40af;
+                --success: #059669;
+                --danger: #dc2626;
+                --warning: #d97706;
+                --bg-dark: #ffffff;
+                --bg-card: #ffffff;
+                --text-primary: #0f172a;
+                --text-secondary: #475569;
+                --border-color: #e6eef8;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+
     st.markdown(
         """
         <div style="padding:2rem 0; text-align:center;">
