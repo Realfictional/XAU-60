@@ -143,6 +143,55 @@ def render_account_summary():
         if active_account:
             st.markdown(f"**Account:** {active_account.name} ({active_account.login}@{active_account.server})")
 
+    # Hero header with KPIs and sparkline
+    try:
+        # Build small sparkline from recent prices
+        spark_df = None
+        if connector and connector.is_connected():
+            try:
+                spark_df = connector.get_ohlcv(symbol or "XAUUSD", "M15", count=50)
+            except Exception:
+                spark_df = None
+
+        if spark_df is None or spark_df.empty:
+            spark_df = generate_mock_ohlcv("XAUUSD", 50)
+
+        kpi_balance = f"{account_info.balance:,.2f} {account_info.currency}" if account_info else "--"
+        kpi_equity = f"{account_info.equity:,.2f}" if account_info else "--"
+        # compute small recent pnl
+        recent_pnl = 0
+        try:
+            recent_pnl = (spark_df['close'].iloc[-1] - spark_df['close'].iloc[0])
+        except Exception:
+            recent_pnl = 0
+
+        col_hero_left, col_hero_right = st.columns([3, 2])
+        with col_hero_left:
+            st.markdown(f"""
+            <div class="hero">
+                <div style="flex:1">
+                    <div class="title">Live Overview</div>
+                    <div class="subtitle muted">Quick account KPIs and recent price action</div>
+                </div>
+                <div style="display:flex; gap:0.5rem; align-items:center">
+                    <div class="kpi-badge">Balance: {kpi_balance}</div>
+                    <div class="kpi-badge" style="background:linear-gradient(90deg,#10b981,#06b39a)">Equity: {kpi_equity}</div>
+                    <div class="kpi-badge" style="background:linear-gradient(90deg,#f59e0b,#f97316)">{recent_pnl:+.2f}</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with col_hero_right:
+            import plotly.graph_objects as go
+            spark_fig = go.Figure(data=[
+                go.Scatter(x=spark_df['time'], y=spark_df['close'], mode='lines', line=dict(color='#8b5cf6', width=2), fill='tozeroy', fillcolor='rgba(139,92,246,0.06)')
+            ])
+            spark_fig.update_layout(margin=dict(l=0,r=0,t=0,b=0), xaxis=dict(visible=False), yaxis=dict(visible=False), height=70)
+            st.plotly_chart(spark_fig, use_container_width=True, config={'displayModeBar': False})
+    except Exception:
+        # Fail gracefully if any hero rendering fails
+        pass
+
     # Metrics row
     if account_info:
         col1, col2, col3, col4, col5, col6 = st.columns(6)
