@@ -1,0 +1,30 @@
+alerts:
+  discord:
+    enabled: false
+  telegram:
+    enabled: false
+logging:
+  file: logs/trading_bot.log
+  level: INFO
+  retention: 7 days
+  rotation: 10 MB
+mt5:
+  login: 413499626
+  password: Nikhil@2256
+  path: ''
+  server: Exness-MT5Trial6
+  timeout: 60000
+risk:
+  max_daily_loss: 5.0
+  max_drawdown: 20.0
+  max_positions: 5
+  max_positions_per_symbol: 2
+  max_risk_per_trade: 2.0
+trading:
+  check_interval: 1
+  default_lot_size: 0.01
+  default_magic_number: 123456
+  slippage: 10
+ui:
+  refresh_rate: 5
+  theme: light
